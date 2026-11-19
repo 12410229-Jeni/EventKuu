@@ -22,8 +22,8 @@ export default function ExploreEventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Status Tab: 'ongoing' | 'upcoming' | 'completed'
-  const [statusTab, setStatusTab] = useState<"ongoing" | "upcoming" | "completed">("ongoing");
+  // Status Tab: 'all' | 'ongoing' | 'upcoming' | 'completed'
+  const [statusTab, setStatusTab] = useState<"all" | "ongoing" | "upcoming" | "completed">("all");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(initialCategory);
   const [timeFilter, setTimeFilter] = useState("All");
@@ -57,7 +57,9 @@ export default function ExploreEventsPage() {
   // Filter based on active status tab, search, category
   const filteredEvents = useMemo(() => {
     const baseList =
-      statusTab === "ongoing"
+      statusTab === "all"
+        ? events
+        : statusTab === "ongoing"
         ? ongoingEvents
         : statusTab === "upcoming"
         ? upcomingEvents
@@ -73,7 +75,7 @@ export default function ExploreEventsPage() {
       const matchCategory = category === "All" || event.category === category;
       return matchSearch && matchCategory;
     });
-  }, [statusTab, ongoingEvents, upcomingEvents, completedEvents, search, category]);
+  }, [statusTab, events, ongoingEvents, upcomingEvents, completedEvents, search, category]);
 
   return (
     <main style={{ backgroundColor: "#F4F8FC", minHeight: "100vh", paddingBottom: "80px" }}>
@@ -101,19 +103,42 @@ export default function ExploreEventsPage() {
             Temukan dan ikuti berbagai kegiatan kampus sesuai minatmu.
           </p>
 
-          {/* 3 Status Filter Tabs matching Screen 3:
-              1. ((•)) Sedang Berlangsung (3)
-              2. 📅 Akan Datang (8)
-              3. ✓ Sudah Selesai (12)
+          {/* 4 Status Filter Tabs:
+              1. 🌟 Semua Event (19)
+              2. ((•)) Sedang Berlangsung (6)
+              3. 📅 Akan Datang (8)
+              4. ✓ Sudah Selesai (5)
           */}
           <div
             style={{
               display: "flex",
-              gap: "12px",
+              gap: "10px",
               flexWrap: "wrap",
-              marginBottom: "28px",
+              marginBottom: "24px",
             }}
           >
+            <button
+              type="button"
+              onClick={() => setStatusTab("all")}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "9px 20px",
+                borderRadius: "999px",
+                fontSize: "13.5px",
+                fontWeight: 700,
+                cursor: "pointer",
+                border: "none",
+                backgroundColor: statusTab === "all" ? "#1D77F2" : "#FFFFFF",
+                color: statusTab === "all" ? "#FFFFFF" : "#475569",
+                boxShadow: statusTab === "all" ? "0 4px 14px rgba(29, 119, 242, 0.3)" : "0 2px 6px rgba(0, 0, 0, 0.03)",
+                transition: "all 0.2s ease",
+              }}
+            >
+              <CalendarDays size={15} /> Semua Event ({events.length})
+            </button>
+
             <button
               type="button"
               onClick={() => setStatusTab("ongoing")}
@@ -121,9 +146,9 @@ export default function ExploreEventsPage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
-                padding: "10px 24px",
+                padding: "9px 20px",
                 borderRadius: "999px",
-                fontSize: "14px",
+                fontSize: "13.5px",
                 fontWeight: 700,
                 cursor: "pointer",
                 border: "none",
@@ -133,7 +158,7 @@ export default function ExploreEventsPage() {
                 transition: "all 0.2s ease",
               }}
             >
-              <Radio size={16} /> Sedang Berlangsung ({ongoingEvents.length || 3})
+              <Radio size={15} /> Sedang Berlangsung ({ongoingEvents.length})
             </button>
 
             <button
@@ -143,9 +168,9 @@ export default function ExploreEventsPage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
-                padding: "10px 24px",
+                padding: "9px 20px",
                 borderRadius: "999px",
-                fontSize: "14px",
+                fontSize: "13.5px",
                 fontWeight: 700,
                 cursor: "pointer",
                 border: "none",
@@ -155,7 +180,7 @@ export default function ExploreEventsPage() {
                 transition: "all 0.2s ease",
               }}
             >
-              <Calendar size={16} /> Akan Datang ({upcomingEvents.length || 8})
+              <Calendar size={15} /> Akan Datang ({upcomingEvents.length})
             </button>
 
             <button
@@ -165,9 +190,9 @@ export default function ExploreEventsPage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
-                padding: "10px 24px",
+                padding: "9px 20px",
                 borderRadius: "999px",
-                fontSize: "14px",
+                fontSize: "13.5px",
                 fontWeight: 700,
                 cursor: "pointer",
                 border: "none",
@@ -177,7 +202,7 @@ export default function ExploreEventsPage() {
                 transition: "all 0.2s ease",
               }}
             >
-              <CheckCircle2 size={16} /> Sudah Selesai ({completedEvents.length || 12})
+              <CheckCircle2 size={15} /> Sudah Selesai ({completedEvents.length})
             </button>
           </div>
 
@@ -300,6 +325,67 @@ export default function ExploreEventsPage() {
                 <option value="month">Bulan Ini</option>
               </select>
             </div>
+          </div>
+
+          {/* Quick Category Filter Pills */}
+          <div
+            style={{
+              display: "flex",
+              gap: "8px",
+              flexWrap: "wrap",
+              marginTop: "20px",
+              alignItems: "center",
+            }}
+          >
+            <span style={{ fontSize: "12px", fontWeight: 700, color: "#64748B", marginRight: "4px" }}>
+              Kategori:
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setCategory("All");
+                searchParams.delete("category");
+                setSearchParams(searchParams);
+              }}
+              style={{
+                padding: "6px 14px",
+                borderRadius: "999px",
+                fontSize: "12.5px",
+                fontWeight: category === "All" ? 700 : 500,
+                cursor: "pointer",
+                border: "1px solid",
+                borderColor: category === "All" ? "#1D77F2" : "#E2E8F0",
+                backgroundColor: category === "All" ? "#1D77F2" : "#FFFFFF",
+                color: category === "All" ? "#FFFFFF" : "#334155",
+                transition: "all 0.15s ease",
+              }}
+            >
+              Semua
+            </button>
+            {EVENT_CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => {
+                  setCategory(cat);
+                  setSearchParams({ category: cat });
+                }}
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: "999px",
+                  fontSize: "12.5px",
+                  fontWeight: category === cat ? 700 : 500,
+                  cursor: "pointer",
+                  border: "1px solid",
+                  borderColor: category === cat ? "#1D77F2" : "#E2E8F0",
+                  backgroundColor: category === cat ? "#1D77F2" : "#FFFFFF",
+                  color: category === cat ? "#FFFFFF" : "#334155",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
         </div>
       </section>

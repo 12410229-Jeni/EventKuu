@@ -80,8 +80,7 @@ export default function EventRegistrationPage() {
         paymentStatus: "pending",
       });
 
-      alert("Pendaftaran berhasil! E-Ticket kamu dapat dilihat di Dashboard.");
-      navigate("/dashboard");
+      navigate("/dashboard?tab=tickets");
     } catch (err) {
       setError(
         err instanceof Error
@@ -153,11 +152,11 @@ export default function EventRegistrationPage() {
           {/* Event Preview Summary */}
           <div className="registration-event">
             <img
-              src={event.posterUrl || "/posters/techfest-poster.jpg"}
+              src={event.posterUrl || "/assets/posters/techfest-poster.jpg"}
               alt={`Poster ${event.name}`}
               className="registration-event-poster"
               onError={(e) => {
-                e.currentTarget.src = "/posters/techfest-poster.jpg";
+                e.currentTarget.src = "/assets/posters/techfest-poster.jpg";
               }}
             />
 

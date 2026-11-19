@@ -41,6 +41,8 @@ export const updateUserProfile = async (
   uid: string,
   data: {
     fullName?: string;
+    studentId?: string;
+    faculty?: string;
     phone?: string;
     avatar?: string;
   }
@@ -51,6 +53,14 @@ export const updateUserProfile = async (
 
     if (data.fullName !== undefined) {
       updatePayload.fullName = data.fullName.trim();
+    }
+
+    if (data.studentId !== undefined) {
+      updatePayload.studentId = data.studentId.trim();
+    }
+
+    if (data.faculty !== undefined) {
+      updatePayload.faculty = data.faculty.trim();
     }
 
     if (data.phone !== undefined) {

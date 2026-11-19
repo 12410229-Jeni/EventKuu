@@ -19,28 +19,37 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { Html5Qrcode } from "html5-qrcode";
-import { verifyTicketCode, checkInTicket, DEFAULT_INITIAL_TICKETS } from "../services/ticketService";
+import { verifyTicketCode, checkInTicket, getAllTickets } from "../services/ticketService";
 import type { Ticket } from "../types";
 
 export default function AdminScanPage() {
-  const [scannedCode, setScannedCode] = useState("ETK-20261112-0045");
+  const [scannedCode, setScannedCode] = useState("");
   const [manualCode, setManualCode] = useState("");
-  const [verifiedTicket, setVerifiedTicket] = useState<Ticket | null>(DEFAULT_INITIAL_TICKETS[0]);
-  const [verifyStatus, setVerifyStatus] = useState<"success" | "used" | "invalid" | "idle">("success");
-  const [statusMessage, setStatusMessage] = useState("Tiket Berhasil Diverifikasi!");
+  const [verifiedTicket, setVerifiedTicket] = useState<Ticket | null>(null);
+  const [verifyStatus, setVerifyStatus] = useState<"success" | "used" | "invalid" | "idle">("idle");
+  const [statusMessage, setStatusMessage] = useState("Siap melakukan pemindaian atau masukkan kode tiket.");
   const [loading, setLoading] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [flashlightOn, setFlashlightOn] = useState(false);
-  const [totalCount, setTotalCount] = useState(350);
-  const [attendedCount, setAttendedCount] = useState(248);
+  const [totalCount, setTotalCount] = useState(0);
+  const [attendedCount, setAttendedCount] = useState(0);
   const [cameraError, setCameraError] = useState("");
 
   const qrReaderRef = useRef<Html5Qrcode | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Jalankan verifikasi awal dengan demo code
+  // Load statistik kehadiran nyata dari tiket
   useEffect(() => {
-    handleVerify("ETK-20261112-0045");
+    const loadStats = async () => {
+      try {
+        const all = await getAllTickets();
+        setTotalCount(all.length);
+        setAttendedCount(all.filter((t) => t.status === "used").length);
+      } catch (err) {
+        console.warn("Gagal load statistik tiket:", err);
+      }
+    };
+    loadStats();
   }, []);
 
   // Cleanup kamera saat unmount
@@ -416,43 +425,6 @@ export default function AdminScanPage() {
                   }}
                 >
                   <Search size={15} /> Cek
-                </button>
-              </div>
-
-              {/* Quick Sample Presets */}
-              <div style={{ marginTop: "12px", display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: "11.5px", color: "#64748B" }}>Coba kode demo:</span>
-                <button
-                  type="button"
-                  onClick={() => handleVerify("ETK-20261112-0045")}
-                  style={{
-                    padding: "4px 10px",
-                    borderRadius: "999px",
-                    fontSize: "11px",
-                    fontWeight: 600,
-                    backgroundColor: "#EFF6FF",
-                    color: "#1D77F2",
-                    border: "1px solid #BFDBFE",
-                    cursor: "pointer",
-                  }}
-                >
-                  ETK-20261112-0045 (Konser)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleVerify("ETK-20261112-0089")}
-                  style={{
-                    padding: "4px 10px",
-                    borderRadius: "999px",
-                    fontSize: "11px",
-                    fontWeight: 600,
-                    backgroundColor: "#EFF6FF",
-                    color: "#1D77F2",
-                    border: "1px solid #BFDBFE",
-                    cursor: "pointer",
-                  }}
-                >
-                  ETK-20261112-0089 (Basket)
                 </button>
               </div>
             </div>

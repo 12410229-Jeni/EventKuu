@@ -88,11 +88,11 @@ export default function EventDetailsPage() {
         <section className="detail-hero-grid">
           <div className="detail-poster-wrap">
             <img
-              src={event.posterUrl || "/posters/techfest-poster.jpg"}
+              src={event.posterUrl || "/assets/posters/techfest-poster.jpg"}
               alt={`Poster ${event.name}`}
               className="detail-poster-img"
               onError={(e) => {
-                e.currentTarget.src = "/posters/techfest-poster.jpg";
+                e.currentTarget.src = "/assets/posters/techfest-poster.jpg";
               }}
             />
             <span className="detail-category-badge">{event.category}</span>

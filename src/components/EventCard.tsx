@@ -35,7 +35,8 @@ export const EventCard = ({ event }: EventCardProps) => {
 
   const poster =
     event.posterUrl ||
-    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80";
+    event.posterURL ||
+    "/assets/posters/techfest-poster.jpg";
 
   return (
     <div className="eventku-card">
@@ -47,8 +48,7 @@ export const EventCard = ({ event }: EventCardProps) => {
           className="eventku-card-img"
           loading="lazy"
           onError={(e) => {
-            e.currentTarget.src =
-              "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80";
+            e.currentTarget.src = "/assets/posters/techfest-poster.jpg";
           }}
         />
 

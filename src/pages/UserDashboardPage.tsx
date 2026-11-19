@@ -26,10 +26,11 @@ import { useAuth } from "../context/AuthContext";
 import { getUserRegistrations, DEFAULT_INITIAL_EVENTS } from "../services/eventService";
 import { getUserTickets } from "../services/ticketService";
 import { getPublishedAnnouncements } from "../services/announcementService";
+import { updateUserProfile } from "../services/userService";
 import type { Registration, Ticket, Announcement, Event } from "../types";
 
 export default function UserDashboardPage() {
-  const { currentUser, userProfile, logout } = useAuth();
+  const { currentUser, userProfile, logout, refreshUserProfile } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get("tab");
 
@@ -61,7 +62,8 @@ export default function UserDashboardPage() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const uid = currentUser?.uid || "demo-user-id";
+        if (!currentUser) return;
+        const uid = currentUser.uid;
         const [regData, tktData, annData] = await Promise.all([
           getUserRegistrations(uid),
           getUserTickets(uid),
@@ -71,11 +73,11 @@ export default function UserDashboardPage() {
         setTickets(tktData);
         setAnnouncements(annData);
 
-        // Profile init
-        setProfileName(userProfile?.fullName || currentUser?.displayName || "Catherine L. Tampi");
-        setStudentId(userProfile?.studentId || "230410021");
-        setFaculty(userProfile?.faculty || "Fakultas Ilmu Komputer");
-        setPhone(userProfile?.phone || "081234567890");
+        // Profile init dari profil Firebase / Firestore riil
+        setProfileName(userProfile?.fullName || currentUser?.displayName || "");
+        setStudentId(userProfile?.studentId || "");
+        setFaculty(userProfile?.faculty || "");
+        setPhone(userProfile?.phone || "");
       } catch (err) {
         console.error("Gagal load user dashboard data:", err);
       } finally {
@@ -91,11 +93,24 @@ export default function UserDashboardPage() {
     setSearchParams({ tab });
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsEditingProfile(false);
-    setProfileSaveSuccess(true);
-    setTimeout(() => setProfileSaveSuccess(false), 3000);
+    if (!currentUser) return;
+    try {
+      await updateUserProfile(currentUser.uid, {
+        fullName: profileName.trim(),
+        studentId: studentId.trim(),
+        faculty: faculty.trim(),
+        phone: phone.trim(),
+      });
+      await refreshUserProfile();
+      setIsEditingProfile(false);
+      setProfileSaveSuccess(true);
+      setTimeout(() => setProfileSaveSuccess(false), 3000);
+    } catch (err) {
+      console.error("Gagal menyimpan profil:", err);
+      alert("Gagal menyimpan profil ke database.");
+    }
   };
 
   // Filter tiket sesuai status
@@ -564,7 +579,7 @@ export default function UserDashboardPage() {
                       }}
                     >
                       <img
-                        src={activeTickets[0].eventPoster || "/posters/konser-kampus.jpg"}
+                        src={activeTickets[0].eventPoster || "/assets/posters/techfest-poster.jpg"}
                         alt={activeTickets[0].eventTitle}
                         style={{
                           width: "60px",
@@ -676,7 +691,7 @@ export default function UserDashboardPage() {
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                     <img
-                      src={reg.eventPoster || "/posters/konser-kampus.jpg"}
+                      src={reg.eventPoster || "/assets/posters/techfest-poster.jpg"}
                       alt={reg.eventTitle}
                       style={{
                         width: "90px",
@@ -856,7 +871,7 @@ export default function UserDashboardPage() {
                         }}
                       >
                         <img
-                          src={tkt.eventPoster || "/posters/konser-kampus.jpg"}
+                          src={tkt.eventPoster || "/assets/posters/techfest-poster.jpg"}
                           alt={tkt.eventTitle}
                           style={{
                             width: "160px",

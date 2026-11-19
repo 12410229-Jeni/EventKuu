@@ -21,20 +21,20 @@ import type { Ticket, TicketStatus } from "../types";
 
 const ticketsCollection = collection(db, "tickets");
 
-// Data E-Ticket Awal untuk Pengguna Demo / Mahasiswa
+// Data E-Ticket Awal untuk Pengguna Mahasiswa
 export const DEFAULT_INITIAL_TICKETS: Ticket[] = [
   {
-    id: "tkt-konser-demo",
-    ticketId: "tkt-konser-demo",
-    registrationId: "reg-konser-demo",
-    userId: "demo-user-id",
-    userName: "Catherine L. Tampi",
-    userEmail: "catherine.tampi@campus.edu",
+    id: "tkt-konser-mhs",
+    ticketId: "tkt-konser-mhs",
+    registrationId: "reg-konser-mhs",
+    userId: "TqTguaY3sxeFkwwhMyUq2XUbIKo1",
+    userName: "Mahasiswa EventKu",
+    userEmail: "mahasiswa.eventku@example.com",
     userStudentId: "230410021",
     eventId: "evt-konser-kampus-2027",
     eventTitle: "Konser Kampus 2027",
     eventCategory: "Konser",
-    eventPoster: "/posters/konser-kampus.jpg",
+    eventPoster: "/assets/posters/konser-kampus.jpg",
     eventDate: "12 Nov 2026",
     eventTime: "19.00 - 22.00 WITA",
     eventLocation: "Lapangan Kampus",
@@ -44,17 +44,17 @@ export const DEFAULT_INITIAL_TICKETS: Ticket[] = [
     createdAt: "2026-11-05",
   },
   {
-    id: "tkt-basket-demo",
-    ticketId: "tkt-basket-demo",
-    registrationId: "reg-basket-demo",
-    userId: "demo-user-id",
-    userName: "Catherine L. Tampi",
-    userEmail: "catherine.tampi@campus.edu",
+    id: "tkt-basket-mhs",
+    ticketId: "tkt-basket-mhs",
+    registrationId: "reg-basket-mhs",
+    userId: "TqTguaY3sxeFkwwhMyUq2XUbIKo1",
+    userName: "Mahasiswa EventKu",
+    userEmail: "mahasiswa.eventku@example.com",
     userStudentId: "230410021",
     eventId: "evt-turnamen-basket-2026",
     eventTitle: "Turnamen Basket Campus League",
     eventCategory: "Sport",
-    eventPoster: "/posters/turnamen-basket.jpg",
+    eventPoster: "/assets/posters/turnamen-basket.jpg",
     eventDate: "12 - 18 Nov 2026",
     eventTime: "14.00 - 18.00 WITA",
     eventLocation: "Sport Center Kampus",
@@ -66,15 +66,15 @@ export const DEFAULT_INITIAL_TICKETS: Ticket[] = [
   {
     id: "tkt-culture-used",
     ticketId: "tkt-culture-used",
-    registrationId: "reg-culture-demo",
-    userId: "demo-user-id",
-    userName: "Catherine L. Tampi",
-    userEmail: "catherine.tampi@campus.edu",
+    registrationId: "reg-culture-mhs",
+    userId: "TqTguaY3sxeFkwwhMyUq2XUbIKo1",
+    userName: "Mahasiswa EventKu",
+    userEmail: "mahasiswa.eventku@example.com",
     userStudentId: "230410021",
     eventId: "evt-culture-fest-2026",
     eventTitle: "Campus Culture & Art Festival",
     eventCategory: "Festival",
-    eventPoster: "/posters/culture-festival.jpg",
+    eventPoster: "/assets/posters/culture-festival.jpg",
     eventDate: "01 - 03 Nov 2026",
     eventTime: "10.00 - 21.00 WITA",
     eventLocation: "Lapangan Terbuka Kampus",
@@ -111,8 +111,9 @@ export const getUserTickets = async (userId: string): Promise<Ticket[]> => {
     console.warn("Membaca Firestore user tickets:", error);
   }
 
+  // Filter tiket sesuai userId pengguna yang sedang login
   return DEFAULT_INITIAL_TICKETS.filter(
-    (t) => t.userId === userId || t.userId === "demo-user-id"
+    (t) => t.userId === userId
   );
 };
 
@@ -265,6 +266,19 @@ export const checkInTicket = async (ticket: Ticket): Promise<boolean> => {
       checkedInAt: checkInTimestamp,
       updatedAt: serverTimestamp(),
     });
+
+    if (ticket.registrationId) {
+      try {
+        const regRef = doc(db, "registrations", ticket.registrationId);
+        await updateDoc(regRef, {
+          status: "attended",
+          attendedAt: checkInTimestamp,
+          updatedAt: serverTimestamp(),
+        });
+      } catch (regErr) {
+        console.warn("Update registration status:", regErr);
+      }
+    }
   } catch (err) {
     console.warn("Gagal update check-in di Firestore, fallback memory:", err);
   }

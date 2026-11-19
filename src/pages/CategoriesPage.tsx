@@ -39,49 +39,56 @@ export default function CategoriesPage() {
   }, []);
 
   // 8 Kategori Wajib Sesuai Ketentuan Dosen & Screenshot Referensi UI
-  const categoriesConfig = [
-    {
-      name: "Sport" as EventCategory,
-      count: "12 Event",
-      icon: Activity,
-    },
-    {
-      name: "Festival" as EventCategory,
-      count: "8 Event",
-      icon: Music,
-    },
-    {
-      name: "Campus & Faculty Day" as EventCategory,
-      count: "Event Tahunan",
-      badge: "Event Tahunan",
-      icon: CalendarDays,
-    },
-    {
-      name: "Competition" as EventCategory,
-      count: "15 Event",
-      icon: Trophy,
-    },
-    {
-      name: "Workshop" as EventCategory,
-      count: "18 Event",
-      icon: Code,
-    },
-    {
-      name: "Teknologi" as EventCategory,
-      count: "20 Event",
-      icon: Laptop,
-    },
-    {
-      name: "Game" as EventCategory,
-      count: "10 Event",
-      icon: Gamepad2,
-    },
-    {
-      name: "Konser" as EventCategory,
-      count: "7 Event",
-      icon: Mic2,
-    },
-  ];
+  const categoriesConfig = useMemo(() => {
+    const getCount = (cat: string) => {
+      const c = events.filter((e) => e.category === cat).length;
+      return `${c} Event`;
+    };
+
+    return [
+      {
+        name: "Sport" as EventCategory,
+        count: getCount("Sport"),
+        icon: Activity,
+      },
+      {
+        name: "Festival" as EventCategory,
+        count: getCount("Festival"),
+        icon: Music,
+      },
+      {
+        name: "Campus & Faculty Day" as EventCategory,
+        count: getCount("Campus & Faculty Day"),
+        badge: "Event Tahunan",
+        icon: CalendarDays,
+      },
+      {
+        name: "Competition" as EventCategory,
+        count: getCount("Competition"),
+        icon: Trophy,
+      },
+      {
+        name: "Workshop" as EventCategory,
+        count: getCount("Workshop"),
+        icon: Code,
+      },
+      {
+        name: "Teknologi" as EventCategory,
+        count: getCount("Teknologi"),
+        icon: Laptop,
+      },
+      {
+        name: "Game" as EventCategory,
+        count: getCount("Game"),
+        icon: Gamepad2,
+      },
+      {
+        name: "Konser" as EventCategory,
+        count: getCount("Konser"),
+        icon: Mic2,
+      },
+    ];
+  }, [events]);
 
   const handleCategoryClick = (catName: EventCategory) => {
     if (selectedCat === catName) {

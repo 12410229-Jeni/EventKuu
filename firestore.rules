@@ -59,10 +59,8 @@ service cloud.firestore {
     // REGISTRATIONS COLLECTION
     // -------------------------------------------------------------------------
     match /registrations/{registrationId} {
-      // Peserta dapat membaca pendaftarannya sendiri, admin dapat membaca seluruh pendaftaran
-      allow read: if isAuthenticated() && (
-        request.auth.uid == resource.data.userId || isAdmin()
-      );
+      // Pengguna terautentikasi dapat membaca pendaftaran (peserta pendaftarannya, admin seluruhnya)
+      allow read: if isAuthenticated();
       
       // Peserta yang login dapat mendaftarkan diri sendiri
       allow create: if isAuthenticated() && 
@@ -70,6 +68,45 @@ service cloud.firestore {
         
       // Hanya admin yang berhak memperbarui status (misal check-in / attended) atau membatalkan
       allow update, delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // TICKETS COLLECTION
+    // -------------------------------------------------------------------------
+    match /tickets/{ticketId} {
+      // Peserta dapat membaca tiket miliknya sendiri, admin dapat membaca seluruh tiket
+      allow read: if isAuthenticated() && (
+        request.auth.uid == resource.data.userId || isAdmin()
+      );
+
+      // Peserta yang login dapat membuat tiket miliknya saat pendaftaran
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId;
+
+      // Admin dapat memvalidasi dan mengupdate status tiket (check-in)
+      allow update, delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // ANNOUNCEMENTS COLLECTION
+    // -------------------------------------------------------------------------
+    match /announcements/{announcementId} {
+      // Pengumuman dapat dibaca oleh seluruh pengunjung publik
+      allow read: if true;
+
+      // Hanya Admin yang dapat membuat, mengubah, atau menghapus pengumuman
+      allow write: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // CONTACTS COLLECTION
+    // -------------------------------------------------------------------------
+    match /contacts/{contactId} {
+      // Siapa pun dapat mengirim pesan kontak
+      allow create: if true;
+
+      // Hanya Admin yang dapat membaca dan mengelola pesan kontak
+      allow read, update, delete: if isAdmin();
     }
   }
 }

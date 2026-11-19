@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* EventKu Design System Color Palette */
+  --powder-blue: #EAF2FB;
+  --powder-blue-light: #F4F8FC;
+  --soft-blue: #DBEAF6;
+  --blue-border: #C7DCEC;
+  --primary-blue: #5B9BCB;
+  --primary-hover: #4889BA;
+  --primary-dark: #3672A1;
+  --primary-glow: rgba(91, 155, 203, 0.25);
+  
+  --ivory: #FDFBF7;
+  --ivory-surface: #FAF9F6;
+  --white: #FFFFFF;
+  --charcoal: #1F2937;
+  --muted: #6B7280;
+  --muted-light: #9CA3AF;
+  --border: #E5EAF0;
+  --border-light: #EEF2F6;
+  
+  --success: #10B981;
+  --success-bg: #E8F6EF;
+  --success-text: #0E855D;
+  --danger: #EF4444;
+  --danger-bg: #FDECEC;
+  --danger-text: #B91C1C;
+  --warning: #F59E0B;
+  --warning-bg: #FEF3C7;
+  --warning-text: #B45309;
+
+  /* Typography */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Border Radii */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(31, 41, 55, 0.04);
+  --shadow-md: 0 6px 20px rgba(31, 41, 55, 0.06);
+  --shadow-lg: 0 12px 32px rgba(31, 41, 55, 0.08);
+  --shadow-card-hover: 0 12px 28px rgba(91, 155, 203, 0.12);
+
+  --container: 1220px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 85px;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--ivory);
+  color: var(--charcoal);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--charcoal);
+  font-family: var(--font-heading);
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+p {
+  color: var(--muted);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.2s ease;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+input, select, textarea {
+  color: var(--charcoal);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted-light);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+::selection {
+  color: var(--charcoal);
+  background: var(--soft-blue);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--powder-blue);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: var(--blue-border);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-blue);
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 13.5px;
+  }
+}

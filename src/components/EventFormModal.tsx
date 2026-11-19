@@ -38,7 +38,7 @@ export default function EventFormModal({
     price: 0,
     organizer: "BEM Kampus",
     status: "upcoming" as EventStatus,
-    posterUrl: "/posters/konser-kampus.jpg",
+    posterUrl: "/assets/posters/techfest-poster.jpg",
   });
 
   const [posterFile, setPosterFile] = useState<File | null>(null);
@@ -61,9 +61,9 @@ export default function EventFormModal({
         price: targetEvent.price || 0,
         organizer: targetEvent.organizer || "BEM Kampus",
         status: targetEvent.status || "upcoming",
-        posterUrl: targetEvent.posterUrl || targetEvent.posterURL || "/posters/konser-kampus.jpg",
+        posterUrl: targetEvent.posterUrl || targetEvent.posterURL || "/assets/posters/techfest-poster.jpg",
       });
-      setPosterPreview(targetEvent.posterUrl || targetEvent.posterURL || "/posters/konser-kampus.jpg");
+      setPosterPreview(targetEvent.posterUrl || targetEvent.posterURL || "/assets/posters/techfest-poster.jpg");
     } else {
       setForm({
         title: "",
@@ -78,9 +78,9 @@ export default function EventFormModal({
         price: 0,
         organizer: "BEM Kampus",
         status: "upcoming",
-        posterUrl: "/posters/konser-kampus.jpg",
+        posterUrl: "/assets/posters/techfest-poster.jpg",
       });
-      setPosterPreview("/posters/konser-kampus.jpg");
+      setPosterPreview("/assets/posters/techfest-poster.jpg");
     }
     setPosterFile(null);
     setStatus("idle");
@@ -133,7 +133,7 @@ export default function EventFormModal({
           });
         } catch (storageErr) {
           console.warn("Storage upload fallback ke preview lokal:", storageErr);
-          finalPosterUrl = posterPreview || "/posters/konser-kampus.jpg";
+          finalPosterUrl = posterPreview || "/assets/posters/techfest-poster.jpg";
         }
       }
 
