@@ -164,7 +164,7 @@ export default function LandingPage() {
               }}
             >
               <img
-                src="/hero-students.jpg"
+                src="/EventKuu/hero-students.jpg"
                 alt="Mahasiswa EventKu dengan Laptop di Tangga Kampus"
                 style={{
                   width: "100%",

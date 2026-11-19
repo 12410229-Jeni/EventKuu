@@ -152,11 +152,11 @@ export default function EventRegistrationPage() {
           {/* Event Preview Summary */}
           <div className="registration-event">
             <img
-              src={event.posterUrl || "/assets/posters/techfest-poster.jpg"}
+              src={event.posterUrl || "/EventKuu/assets/posters/techfest-poster.jpg"}
               alt={`Poster ${event.name}`}
               className="registration-event-poster"
               onError={(e) => {
-                e.currentTarget.src = "/assets/posters/techfest-poster.jpg";
+                e.currentTarget.src = "/EventKuu/assets/posters/techfest-poster.jpg";
               }}
             />
 

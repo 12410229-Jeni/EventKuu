@@ -36,7 +36,7 @@ export const EventCard = ({ event }: EventCardProps) => {
   const poster =
     event.posterUrl ||
     event.posterURL ||
-    "/assets/posters/techfest-poster.jpg";
+    "/EventKuu/assets/posters/techfest-poster.jpg";
 
   return (
     <div className="eventku-card">
@@ -48,7 +48,7 @@ export const EventCard = ({ event }: EventCardProps) => {
           className="eventku-card-img"
           loading="lazy"
           onError={(e) => {
-            e.currentTarget.src = "/assets/posters/techfest-poster.jpg";
+            e.currentTarget.src = "/EventKuu/assets/posters/techfest-poster.jpg";
           }}
         />
 

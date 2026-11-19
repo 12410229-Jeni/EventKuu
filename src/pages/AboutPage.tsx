@@ -112,7 +112,7 @@ export default function AboutPage() {
               }}
             >
               <img
-                src="/hero-students.jpg"
+                src="/EventKuu/hero-students.jpg"
                 alt="Mahasiswa Kampus EventKu"
                 style={{ width: "100%", height: "280px", objectFit: "cover" }}
               />

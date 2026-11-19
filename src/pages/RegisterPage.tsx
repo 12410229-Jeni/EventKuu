@@ -169,7 +169,7 @@ export default function RegisterPage() {
             }}
           >
             <img
-              src="/auth-students.jpg"
+              src="/EventKuu/auth-students.jpg"
               alt="Mahasiswa Mendaftar EventKu"
               style={{
                 width: "100%",

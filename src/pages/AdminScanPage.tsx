@@ -258,7 +258,7 @@ export default function AdminScanPage() {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundImage: "url('/auth-students.jpg')",
+                    backgroundImage: "url('/EventKuu/auth-students.jpg')",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}

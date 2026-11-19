@@ -174,7 +174,7 @@ export default function LoginPage() {
             }}
           >
             <img
-              src="/auth-students.jpg"
+              src="/EventKuu/auth-students.jpg"
               alt="Mahasiswa di Festival Konser Kampus"
               style={{
                 width: "100%",

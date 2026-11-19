@@ -579,7 +579,7 @@ export default function UserDashboardPage() {
                       }}
                     >
                       <img
-                        src={activeTickets[0].eventPoster || "/assets/posters/techfest-poster.jpg"}
+                        src={activeTickets[0].eventPoster || "/EventKuu/assets/posters/techfest-poster.jpg"}
                         alt={activeTickets[0].eventTitle}
                         style={{
                           width: "60px",
@@ -691,7 +691,7 @@ export default function UserDashboardPage() {
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                     <img
-                      src={reg.eventPoster || "/assets/posters/techfest-poster.jpg"}
+                      src={reg.eventPoster || "/EventKuu/assets/posters/techfest-poster.jpg"}
                       alt={reg.eventTitle}
                       style={{
                         width: "90px",
@@ -871,7 +871,7 @@ export default function UserDashboardPage() {
                         }}
                       >
                         <img
-                          src={tkt.eventPoster || "/assets/posters/techfest-poster.jpg"}
+                          src={tkt.eventPoster || "/EventKuu/assets/posters/techfest-poster.jpg"}
                           alt={tkt.eventTitle}
                           style={{
                             width: "160px",
