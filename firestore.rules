@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function untuk memeriksa apakah pengguna telah terautentikasi
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function untuk memeriksa apakah pengguna memiliki role 'admin'
+    function isAdmin() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // -------------------------------------------------------------------------
+    // USERS COLLECTION
+    // -------------------------------------------------------------------------
+    match /users/{userId} {
+      // Pengguna terautentikasi dapat membaca data profil pengguna
+      allow read: if isAuthenticated();
+      
+      // Pengguna baru hanya dapat membuat profil mereka sendiri dengan role strictly 'user'
+      // Mencegah pengguna mempromosikan diri sendiri menjadi admin
+      allow create: if isAuthenticated() && request.auth.uid == userId && 
+        request.resource.data.role == 'user';
+        
+      // Hanya admin yang dapat mengubah field role
+      // Pengguna biasa hanya dapat mengubah data profil non-role miliknya
+      allow update: if isAdmin() || (
+        isAuthenticated() && request.auth.uid == userId && 
+        request.resource.data.role == resource.data.role
+      );
+      
+      // Hanya administrator yang dapat menghapus akun pengguna
+      allow delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------------------
+    // EVENTS COLLECTION (CRUD)
+    // -------------------------------------------------------------------------
+    match /events/{eventId} {
+      // Pengunjung publik dan mahasiswa dapat melihat daftar event
+      allow read: if true;
+      
+      // Hanya Admin yang dapat membuat dan menghapus event
+      allow create: if isAdmin();
+      allow delete: if isAdmin();
+      
+      // Admin dapat mengupdate seluruh field event
+      // Pengguna terdaftar dapat menginkremen registeredCount saat mendaftar event
+      allow update: if isAdmin() || (
+        isAuthenticated() && 
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['registeredCount'])
+      );
+    }
+
+    // -------------------------------------------------------------------------
+    // REGISTRATIONS COLLECTION
+    // -------------------------------------------------------------------------
+    match /registrations/{registrationId} {
+      // Peserta dapat membaca pendaftarannya sendiri, admin dapat membaca seluruh pendaftaran
+      allow read: if isAuthenticated() && (
+        request.auth.uid == resource.data.userId || isAdmin()
+      );
+      
+      // Peserta yang login dapat mendaftarkan diri sendiri
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId;
+        
+      // Hanya admin yang berhak memperbarui status (misal check-in / attended) atau membatalkan
+      allow update, delete: if isAdmin();
+    }
+  }
+}
